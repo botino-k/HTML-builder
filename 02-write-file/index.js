@@ -6,22 +6,27 @@ const myWay = path.join(__dirname,  'test.txt');
 
 const stream = fs.createWriteStream(myWay);
 
-const myConsole = new console.Console(stream);
-
-const readline = require('readline').createInterface({
+const readline = require('readline');
+const rl = readline.createInterface({
   input: process.stdin,
-  output: process.stdout,
+  output: process.stdout
 });
 
-readline.on('line', (line) => {
-  if(line!='exit'){
-  myConsole.log(line)
-}if(line =='exit'){
-  process.exit();}
+
+rl.write('Пишите информацию:\n');
+
+function exitMassage() {
+  rl.write('Конец информации!');
+  process.exit(0);
+}
+
+rl.on('line', (line) => {
+  if (line === 'exit') {
+    exitMassage();
+  }
+  stream.write(line + '\n');
 });
 
-readline.question('Пишите информацию\n', (name) => {
-  myConsole.log(name) 
-});
 
-process.on('exit', () => console.log('\nДо встречи!'));
+
+rl.on('close', exitMassage);
